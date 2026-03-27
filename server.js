@@ -69,9 +69,14 @@ const server = createServer((req, res) => {
   const pathName = new URL(req.url, "http://127.0.0.1:8000").pathname;
 
   if (pathName === "/") {
-    const renderedHtml = renderToString(<Home />);
+    const renderedReact = renderToString(<Home />);
+    const html = htmlTemplate.replace(
+      '<div id="root">context</div>',
+      `<div id="root">${renderedReact}</div>`
+    );
+
     res.writeHead(200, { "Content-type": "text/html" });
-    res.end(renderedHtml);
+    res.end(html);
   } else if (pathName === "/test") {
     res.end("Test route working");
   } else {
