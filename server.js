@@ -4,6 +4,7 @@ const { renderToString } = require("react-dom/server");
 const React = require("react");
 
 const htmlTemplate = readFileSync(`${__dirname}/index.html`, "utf-8");
+const clientJS = readFileSync(`${__dirname}/client.js`, "utf-8");
 
 const pizzas = [
   {
@@ -72,13 +73,14 @@ const server = createServer((req, res) => {
     const renderedReact = renderToString(<Home />);
     const html = htmlTemplate.replace(
       '<div id="root">context</div>',
-      `<div id="root">${renderedReact}</div>`
+      `<div id="root">${renderedReact}</div>`,
     );
 
     res.writeHead(200, { "Content-type": "text/html" });
     res.end(html);
-  } else if (pathName === "/test") {
-    res.end("Test route working");
+  } else if (pathName === "/client.js") {
+    res.writeHead(200, { "Content-type": "application/javascript" });
+    res.end(clientJS);
   } else {
     res.end("THE URL CANNOT BE FOUND");
   }
